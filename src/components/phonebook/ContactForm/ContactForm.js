@@ -1,70 +1,59 @@
-import React from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import css from '../Style.module.css';
 
-class ContactForm extends React.Component {
-  state = {
-    name: '',
-    number: '',
+export default function OldContactForm({ handleAddContact }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const nameInputId = shortid.generate();
+  const numberInputId = shortid.generate();
+
+  const handleChangeName = event => {
+    setName(event.target.value);
   };
 
-  nameInputId = shortid.generate();
-  numberInputId = shortid.generate();
-
-  handleChange = event => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
+  const handleChangeNumber = event => {
+    setNumber(event.target.value);
   };
 
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-
-    this.props.onSubmit(this.state);
-    this.reset();
+    setName('');
+    setNumber('');
+    handleAddContact(name, number);
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
-  };
+  return (
+    <form className={css.form} onSubmit={handleSubmit}>
+      <label className={css.label} htmlFor={nameInputId}>
+        Name
+        <input
+          className={css.input}
+          value={name}
+          type="text"
+          required
+          id={nameInputId}
+          onChange={handleChangeName}
+          pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        />
+      </label>
+      <label className={css.label} htmlFor={numberInputId}>
+        Number
+        <input
+          className={css.input}
+          value={number}
+          required
+          type="number"
+          onChange={handleChangeNumber}
+          id={numberInputId}
+          pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
+        />
+      </label>
 
-  render() {
-    const { name, number } = this.state;
-
-    return (
-      <form className={css.form} onSubmit={this.handleSubmit}>
-        <label className={css.label} htmlFor={this.nameInputId}>
-          Name
-          <input
-            className={css.input}
-            type="text"
-            name="name"
-            required
-            value={name}
-            onChange={this.handleChange}
-            id={this.nameInputId}
-            pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          />
-        </label>
-        <label className={css.label} htmlFor={this.numberInputId}>
-          Number
-          <input
-            className={css.input}
-            type="tel"
-            name="number"
-            required
-            value={number}
-            onChange={this.handleChange}
-            id={this.numberInputId}
-            pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
-          ></input>
-        </label>
-
-        <button className={css.btnSubmit} type="submit">
-          Add contact
-        </button>
-      </form>
-    );
-  }
+      <button className={css.btnSubmit} type="submit">
+        Add contact
+      </button>
+    </form>
+  );
 }
-
-export default ContactForm;

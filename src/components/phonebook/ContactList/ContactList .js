@@ -1,22 +1,19 @@
-import React from 'react';
 import css from '../Style.module.css';
 
-const ContactList = ({ contacts, onDeleteContact }) => (
-  <ul className={css.list}>
-    {contacts.map(contact => (
-      <li className={css.item} key={contact.id}>
-        <p>
+export default function OldContactList({ fiterContact, handleDeleteContact }) {
+  return (
+    <ul className={css.list}>
+      {fiterContact().map(contact => (
+        <li className={css.item} key={contact.id}>
           {contact.name}: {contact.number}
-        </p>
-        <button
-          className={css.btnDelete}
-          onClick={() => onDeleteContact(contact.id)}
-        >
-          Delete
-        </button>
-      </li>
-    ))}
-  </ul>
-);
-
-export default ContactList;
+          <button
+            className={css.btnDelete}
+            onClick={() => handleDeleteContact(contact.id)}
+          >
+            Delete
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
